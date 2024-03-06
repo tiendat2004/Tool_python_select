@@ -1,0 +1,7 @@
+# Cài đặt các thư viện sau
+# pip install selenium
+# pip install pdfplumber
+# pip install easyocr
+# pip install webdriver_manager
+# python3 -m pip install webdriver-manager --upgrade
+# python3 -m pip install packaging
