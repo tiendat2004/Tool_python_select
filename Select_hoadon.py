@@ -12,7 +12,7 @@ import io
 import sys 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 web = webdriver.Chrome(ChromeDriverManager().install())
-path = 'D:/2024/Python_tool/hoadon'
+path = 'D:/2024/Python_tool/hoadon' #tùy vào path của ảnh chứa hóa đơn
 files = os.listdir(path)
 for file in files:
     f = "hoadon/" + str(file) + ""
