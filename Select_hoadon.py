@@ -6,19 +6,30 @@ from time import sleep
 import easyocr
 import cv2
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 import os
 import pyautogui
 import io
-import sys 
+import sys
+import warnings
+
+warnings.filterwarnings("ignore", category=FutureWarning)
+
+service = Service(ChromeDriverManager().install())
+web = webdriver.Chrome(service=service)
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-web = webdriver.Chrome(ChromeDriverManager().install())
-path = 'D:/2024/Python_tool/hoadon' #tùy vào path của ảnh chứa hóa đơn
-files = os.listdir(path)
+
+path = 'D:/2024/Python_tool/hoadon'  # Thư mục chứa các tệp PDF
+files = os.listdir(path)  # Lấy danh sách các tệp trong thư mục
+
 for file in files:
-    f = "hoadon/" + str(file) + ""
-    with pdfplumber.open(f) as pdf:
-        page = pdf.pages[0]
-        text = page.extract_text()
+    if file.endswith('.pdf'):
+        f = os.path.join(path, file) 
+        with pdfplumber.open(f) as pdf:
+         page = pdf.pages[0]
+         text = page.extract_text()
+            
+
         Mst = re.findall(r'\d{10}', text)[0]
         MauSo = re.findall(r'\d\w{4,}/[0-9]{3,}', text)[0]
         KyHieuHD = re.findall(r'\w{2,4}/\w{3}', text)[1]
@@ -39,7 +50,7 @@ for file in files:
         sleep(1)
         web.get_screenshot_as_file("Anh.png")
         imgCv2 = cv2.imread("Anh.png")
-        imgCrop = imgCv2[492:522,507:656]  # Tọa độ vùng ảnh của mã capcha
+        imgCrop = imgCv2[492:522,507:656]
         cv2.imwrite('Anh.png', imgCrop)
         reader = easyocr.Reader(['en', 'vi'],gpu=False)
         result = reader.readtext('Anh.png')
@@ -81,3 +92,4 @@ for file in files:
                 print('ok')
         else:
             pyautogui.hotkey('ctrl', 'p', 'enter')
+web.quit()
